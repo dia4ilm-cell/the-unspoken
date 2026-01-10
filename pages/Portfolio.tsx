@@ -81,22 +81,24 @@ const Portfolio: React.FC = () => {
       </div>
 
       {selectedVideo && (
-        <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/98 backdrop-blur-3xl p-4 md:p-12 fade-in">
-          {/* Фон для закрытия при клике */}
-          <div className="absolute inset-0 z-0" onClick={closeLightbox}></div>
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/98 backdrop-blur-3xl p-4 md:p-8 transition-opacity duration-500">
+          {/* Overlay to close */}
+          <div className="absolute inset-0 cursor-zoom-out" onClick={closeLightbox}></div>
           
+          {/* Close button - more accessible position */}
           <button 
             onClick={closeLightbox}
-            className="absolute top-6 right-6 md:top-10 md:right-10 text-white/60 hover:text-white transition-all p-4 z-[210] cursor-pointer"
-            aria-label="Close"
+            className="absolute top-4 right-4 md:top-8 md:right-8 text-white/50 hover:text-white transition-all p-2 z-[1010]"
           >
             <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12"></path>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
           
-          <div className="relative z-10 w-full max-w-6xl max-h-full flex flex-col items-center justify-center">
-            <div className="w-full aspect-video bg-black shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5 overflow-hidden">
+          <div className="relative w-full max-w-6xl z-10 flex flex-col items-center animate-fade-in">
+            {/* The Video Container with responsive scaling */}
+            <div className="w-full bg-black shadow-2xl border border-white/5 overflow-hidden flex items-center justify-center" 
+                 style={{ maxHeight: '70vh', aspectRatio: '16/9' }}>
               <iframe 
                 src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
                 className="w-full h-full"
@@ -106,9 +108,14 @@ const Portfolio: React.FC = () => {
               ></iframe>
             </div>
             
-            <div className="mt-8 text-center text-white/80 pointer-events-none">
-              <p className="text-[9px] tracking-[0.6em] uppercase mb-3 opacity-40 font-bold">{selectedVideo.location} • {selectedVideo.year}</p>
-              <h2 className="text-2xl md:text-3xl font-serif italic text-white">{selectedVideo.title}</h2>
+            {/* Metadata - fixed layout to avoid pushing content */}
+            <div className="mt-6 md:mt-10 text-center text-white w-full px-4 select-none">
+              <p className="text-[9px] md:text-[10px] tracking-[0.5em] uppercase mb-2 opacity-50 font-bold">
+                {selectedVideo.location} • {selectedVideo.year}
+              </p>
+              <h2 className="text-xl md:text-3xl font-serif italic text-white/90">
+                {selectedVideo.title}
+              </h2>
             </div>
           </div>
         </div>
