@@ -23,13 +23,6 @@ const Home: React.FC = () => {
               <span className="relative z-10">The Portfolio</span>
               <span className="absolute bottom-[-8px] left-0 w-0 h-[1px] bg-black transition-all duration-700 group-hover:w-full"></span>
             </Link>
-            <Link 
-              to="/contact" 
-              className="group relative inline-block text-[10px] uppercase tracking-[0.5em] text-black font-medium"
-            >
-              <span className="relative z-10">Inquire</span>
-              <span className="absolute bottom-[-8px] left-0 w-0 h-[1px] bg-black transition-all duration-700 group-hover:w-full"></span>
-            </Link>
           </div>
         </div>
         
