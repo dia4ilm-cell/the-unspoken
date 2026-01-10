@@ -17,7 +17,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     location: 'California, USA',
     coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070',
     videoUrl: 'https://vimeo.com/1098693064', 
-    year: '2023'
+    year: '2025'
   },
   {
     id: '3',
