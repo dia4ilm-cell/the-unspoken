@@ -7,6 +7,19 @@ const Portfolio: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
   const vimeoLibraryUrl = "https://vimeo.com/priorityfilm";
 
+  // Helper to ensure Vimeo URLs are in the correct embed format
+  const getEmbedUrl = (url: string) => {
+    if (url === '#') return '#';
+    if (url.includes('player.vimeo.com')) return url;
+    
+    // Extract ID from standard vimeo.com/123456789 link
+    const match = url.match(/vimeo\.com\/(\d+)/);
+    if (match && match[1]) {
+      return `https://player.vimeo.com/video/${match[1]}`;
+    }
+    return url;
+  };
+
   const openLightbox = (item: PortfolioItem) => {
     if (item.videoUrl !== '#') {
       setSelectedVideo(item);
@@ -73,13 +86,10 @@ const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* Cinematic Lightbox - Perfectly Centered */}
       {selectedVideo && (
         <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/98 backdrop-blur-2xl animate-fade-in p-6 md:p-12">
-          {/* Background Overlay Area to close */}
           <div className="absolute inset-0 z-0" onClick={closeLightbox}></div>
           
-          {/* Close Button */}
           <button 
             onClick={closeLightbox}
             className="absolute top-8 right-8 text-white/40 hover:text-white transition-all p-4 z-[110]"
@@ -90,10 +100,9 @@ const Portfolio: React.FC = () => {
             </svg>
           </button>
           
-          {/* Video Container - Focused and Centered */}
           <div className="relative z-10 w-full max-w-6xl aspect-video bg-black shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-white/5">
             <iframe 
-              src={`${selectedVideo.videoUrl}&autoplay=1&title=0&byline=0&portrait=0`}
+              src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
               className="absolute inset-0 w-full h-full"
               frameBorder="0" 
               allow="autoplay; fullscreen; picture-in-picture" 
@@ -101,7 +110,6 @@ const Portfolio: React.FC = () => {
             ></iframe>
           </div>
           
-          {/* Project Details */}
           <div className="relative z-10 mt-12 text-center text-white/60 animate-fade-in">
             <p className="text-[10px] tracking-[0.6em] uppercase mb-4 opacity-40">{selectedVideo.location} • {selectedVideo.year}</p>
             <h2 className="text-3xl font-serif italic text-white/90">{selectedVideo.title}</h2>

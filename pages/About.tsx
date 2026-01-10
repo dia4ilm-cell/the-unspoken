@@ -6,7 +6,8 @@ const About: React.FC = () => {
     <div className="pt-40 pb-24 bg-white text-black">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center mb-32">
-          <div className="relative order-2 lg:order-1 reveal">
+          {/* Added fade-in to ensure immediate visibility of top content */}
+          <div className="relative order-2 lg:order-1 fade-in">
             <div className="absolute -top-10 -left-10 w-full h-full border border-black/5 -z-10 hidden md:block"></div>
             <img 
               src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974" 
@@ -19,7 +20,7 @@ const About: React.FC = () => {
             </div>
           </div>
           
-          <div className="order-1 lg:order-2 reveal">
+          <div className="order-1 lg:order-2 fade-in">
             <span className="text-black/40 tracking-[0.5em] text-[10px] uppercase block mb-6 font-bold">The Artist</span>
             <h1 className="text-5xl md:text-7xl font-serif mb-12 leading-tight">Meet <span className="italic">Maksud</span></h1>
             
@@ -43,7 +44,7 @@ const About: React.FC = () => {
           </div>
         </div>
 
-        {/* Process Section */}
+        {/* Process Section - Uses Reveal for scroll effects */}
         <div className="bg-white border-t border-b border-black/5 py-32 px-12 -mx-6 md:mx-0 reveal">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-20 text-center">
             <div className="reveal">
