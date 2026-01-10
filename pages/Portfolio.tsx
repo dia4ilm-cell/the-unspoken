@@ -7,12 +7,10 @@ const Portfolio: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
   const vimeoLibraryUrl = "https://vimeo.com/priorityfilm";
 
-  // Helper to ensure Vimeo URLs are in the correct embed format
   const getEmbedUrl = (url: string) => {
     if (url === '#') return '#';
     if (url.includes('player.vimeo.com')) return url;
     
-    // Extract ID from standard vimeo.com/123456789 link
     const match = url.match(/vimeo\.com\/(\d+)/);
     if (match && match[1]) {
       return `https://player.vimeo.com/video/${match[1]}`;
@@ -83,32 +81,35 @@ const Portfolio: React.FC = () => {
       </div>
 
       {selectedVideo && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/98 backdrop-blur-2xl animate-fade-in p-6 md:p-12">
+        <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/98 backdrop-blur-3xl p-4 md:p-12 fade-in">
+          {/* Фон для закрытия при клике */}
           <div className="absolute inset-0 z-0" onClick={closeLightbox}></div>
           
           <button 
             onClick={closeLightbox}
-            className="absolute top-8 right-8 text-white/40 hover:text-white transition-all p-4 z-[110]"
+            className="absolute top-6 right-6 md:top-10 md:right-10 text-white/60 hover:text-white transition-all p-4 z-[210] cursor-pointer"
             aria-label="Close"
           >
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
           
-          <div className="relative z-10 w-full max-w-6xl aspect-video bg-black shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-white/5">
-            <iframe 
-              src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
-              className="absolute inset-0 w-full h-full"
-              frameBorder="0" 
-              allow="autoplay; fullscreen; picture-in-picture" 
-              allowFullScreen
-            ></iframe>
-          </div>
-          
-          <div className="relative z-10 mt-12 text-center text-white/60 animate-fade-in">
-            <p className="text-[10px] tracking-[0.6em] uppercase mb-4 opacity-40">{selectedVideo.location} • {selectedVideo.year}</p>
-            <h2 className="text-3xl font-serif italic text-white/90">{selectedVideo.title}</h2>
+          <div className="relative z-10 w-full max-w-6xl max-h-full flex flex-col items-center justify-center">
+            <div className="w-full aspect-video bg-black shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/5 overflow-hidden">
+              <iframe 
+                src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
+                className="w-full h-full"
+                frameBorder="0" 
+                allow="autoplay; fullscreen; picture-in-picture" 
+                allowFullScreen
+              ></iframe>
+            </div>
+            
+            <div className="mt-8 text-center text-white/80 pointer-events-none">
+              <p className="text-[9px] tracking-[0.6em] uppercase mb-3 opacity-40 font-bold">{selectedVideo.location} • {selectedVideo.year}</p>
+              <h2 className="text-2xl md:text-3xl font-serif italic text-white">{selectedVideo.title}</h2>
+            </div>
           </div>
         </div>
       )}
