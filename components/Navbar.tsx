@@ -15,7 +15,6 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
@@ -29,11 +28,11 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-700 ${isScrolled ? 'bg-white/90 backdrop-blur-md py-4' : 'bg-transparent py-8'}`}>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-700 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-8'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center text-black">
-          <Link to="/" className="text-xl md:text-2xl font-serif tracking-[0.2em] uppercase flex flex-col md:flex-row md:gap-3 items-center">
-            <span className="font-bold">Sharipov</span> 
-            <span className="text-[10px] md:text-xs tracking-[0.5em] opacity-40 font-sans mt-1 md:mt-2">Production</span>
+          <Link to="/" className="flex items-baseline gap-3 group">
+            <span className="text-xl md:text-2xl font-serif tracking-[0.2em] uppercase font-bold">Sharipov</span> 
+            <span className="text-[9px] md:text-[10px] tracking-[0.5em] uppercase opacity-40 font-sans font-light">Production</span>
           </Link>
           
           {/* Desktop Nav */}
@@ -42,7 +41,7 @@ const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-[9px] uppercase tracking-[0.5em] hover:opacity-100 transition-all duration-500 hover-scale ${location.pathname === link.path ? 'opacity-100 font-bold' : 'opacity-40 font-light'}`}
+                className={`text-[9px] uppercase tracking-[0.5em] hover:opacity-100 transition-all duration-500 ${location.pathname === link.path ? 'opacity-100 font-bold border-b border-black/20 pb-1' : 'opacity-40 font-light'}`}
               >
                 {link.name}
               </Link>
@@ -53,6 +52,7 @@ const Navbar: React.FC = () => {
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="md:hidden z-[110] relative p-2"
+            aria-label="Toggle Menu"
           >
             <div className={`w-6 h-0.5 bg-black transition-all mb-1.5 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
             <div className={`w-6 h-0.5 bg-black transition-all ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}></div>
@@ -67,14 +67,14 @@ const Navbar: React.FC = () => {
           <Link
             key={link.path}
             to={link.path}
-            className={`text-4xl font-serif tracking-tight ${location.pathname === link.path ? 'italic' : 'font-light opacity-50'}`}
+            className={`text-4xl font-serif tracking-tight ${location.pathname === link.path ? 'italic underline underline-offset-8' : 'font-light opacity-50'}`}
           >
             {link.name}
           </Link>
         ))}
         <div className="pt-12 flex space-x-8 opacity-40">
-           <a href="#" className="text-[10px] tracking-[0.3em] uppercase">Instagram</a>
-           <a href="#" className="text-[10px] tracking-[0.3em] uppercase">Vimeo</a>
+           <a href="https://instagram.com/maksud_sharipov" target="_blank" rel="noopener noreferrer" className="text-[10px] tracking-[0.3em] uppercase">Instagram</a>
+           <a href="https://vimeo.com/priorityfilm" target="_blank" rel="noopener noreferrer" className="text-[10px] tracking-[0.3em] uppercase">Vimeo</a>
         </div>
       </div>
     </>

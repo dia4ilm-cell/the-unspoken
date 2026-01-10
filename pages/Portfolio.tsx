@@ -36,12 +36,13 @@ const Portfolio: React.FC = () => {
     <div className="pt-32 pb-24 px-6 fade-in">
       <div className="container mx-auto">
         <header className="text-center mb-24 max-w-2xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif mb-12">The Portfolio</h1>
+          <h1 className="text-5xl md:text-7xl font-serif mb-12 uppercase" style={{ letterSpacing: '0.35em' }}>Explore</h1>
           <a 
             href={vimeoLibraryUrl} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-block text-[10px] tracking-[0.3em] uppercase text-black border border-black/20 px-10 py-4 hover:bg-black hover:text-white transition-all duration-700"
+            className="inline-block uppercase text-black border border-black/20 px-10 py-4 hover:bg-black hover:text-white transition-all duration-700"
+            style={{ letterSpacing: '0.35em', fontSize: '0.65rem' }}
           >
             Watch Full Library on Vimeo
           </a>
@@ -61,14 +62,14 @@ const Portfolio: React.FC = () => {
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                    <span className="text-white text-[9px] tracking-[0.4em] uppercase border border-white/30 px-6 py-3 backdrop-blur-sm">
+                    <span className="text-white uppercase border border-white/30 px-6 py-3 backdrop-blur-sm" style={{ letterSpacing: '0.35em', fontSize: '0.6rem' }}>
                       {item.videoUrl === '#' ? 'View on Vimeo' : 'Play Film'}
                     </span>
                 </div>
               </div>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-[9px] tracking-[0.3em] text-black/40 uppercase mb-2 font-bold">{item.location} • {item.year}</p>
+                  <p className="text-black/40 uppercase mb-2 font-bold" style={{ letterSpacing: '0.35em', fontSize: '0.55rem' }}>{item.location} • {item.year}</p>
                   <h3 className="text-xl md:text-2xl font-serif group-hover:text-black transition-colors">{item.title}</h3>
                 </div>
                 <div className="pt-2">
@@ -82,13 +83,12 @@ const Portfolio: React.FC = () => {
 
       {selectedVideo && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/98 backdrop-blur-3xl p-4 md:p-8 transition-opacity duration-500">
-          {/* Overlay to close */}
           <div className="absolute inset-0 cursor-zoom-out" onClick={closeLightbox}></div>
           
-          {/* Close button - more accessible position */}
           <button 
             onClick={closeLightbox}
             className="absolute top-4 right-4 md:top-8 md:right-8 text-white/50 hover:text-white transition-all p-2 z-[1010]"
+            aria-label="Close"
           >
             <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12"></path>
@@ -96,7 +96,6 @@ const Portfolio: React.FC = () => {
           </button>
           
           <div className="relative w-full max-w-6xl z-10 flex flex-col items-center animate-fade-in">
-            {/* The Video Container with responsive scaling */}
             <div className="w-full bg-black shadow-2xl border border-white/5 overflow-hidden flex items-center justify-center" 
                  style={{ maxHeight: '70vh', aspectRatio: '16/9' }}>
               <iframe 
@@ -108,9 +107,8 @@ const Portfolio: React.FC = () => {
               ></iframe>
             </div>
             
-            {/* Metadata - fixed layout to avoid pushing content */}
             <div className="mt-6 md:mt-10 text-center text-white w-full px-4 select-none">
-              <p className="text-[9px] md:text-[10px] tracking-[0.5em] uppercase mb-2 opacity-50 font-bold">
+              <p className="uppercase mb-2 opacity-50 font-bold" style={{ letterSpacing: '0.5em', fontSize: '0.65rem' }}>
                 {selectedVideo.location} • {selectedVideo.year}
               </p>
               <h2 className="text-xl md:text-3xl font-serif italic text-white/90">
