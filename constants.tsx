@@ -2,9 +2,14 @@
 import { PortfolioItem } from './types';
 
 /**
- * ИНСТРУКЦИЯ ПО ЗАМЕНЕ:
- * 1. videoUrl: Можно просто вставить ссылку на видео, например https://vimeo.com/123456789
- * 2. ВАЖНО: Если видео не грузится, проверьте в настройках Vimeo (Privacy), что разрешено встраивание (Embed) на другие сайты.
+ * ИНСТРУКЦИЯ ПО ЛОКАЛЬНОМУ ХРАНЕНИЮ:
+ * 
+ * 1. Поместите ваши фото в корневую папку проекта (рядом с index.html).
+ * 2. В поле coverImage укажите путь к файлу, начиная с './'
+ *    Пример: coverImage: './my-wedding-photo.jpg'
+ * 
+ * 3. Для видео мы по-прежнему рекомендуем использовать Vimeo, 
+ *    так как это обеспечивает лучшую скорость загрузки и качество плеера.
  */
 
 export const PORTFOLIO_DATA: PortfolioItem[] = [
@@ -12,7 +17,8 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: '1',
     title: 'Eternal Love',
     location: 'Paris, France',
-    coverImage: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069',
+    // Просто положите файл с названием 'cover1.jpg' в папку с сайтом
+    coverImage: './cover1.jpg', 
     videoUrl: 'https://vimeo.com/382879350',
     year: '2024'
   },
@@ -20,15 +26,15 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: '2',
     title: 'Hummingbird Nest Ranch',
     location: 'California, USA',
-    coverImage: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1974',
-    videoUrl: 'https://vimeo.com/1098693064?fl=pl&fe=cm', 
+    coverImage: './cover2.jpg',
+    videoUrl: 'https://vimeo.com/1098693064', 
     year: '2023'
   },
   {
     id: '3',
     title: 'Tuscan Sunset',
     location: 'Tuscany, Italy',
-    coverImage: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=2070',
+    coverImage: './cover3.jpg',
     videoUrl: 'https://vimeo.com/382879350',
     year: '2023'
   },
@@ -36,7 +42,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: '4',
     title: 'Morning Bloom',
     location: 'Provence, France',
-    coverImage: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073',
+    coverImage: './cover4.jpg',
     videoUrl: 'https://vimeo.com/382879350',
     year: '2024'
   },
@@ -44,7 +50,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: '5',
     title: 'City Lights',
     location: 'New York, USA',
-    coverImage: 'https://images.unsplash.com/photo-1522673607200-1648832cee98?q=80&w=2074',
+    coverImage: './cover5.jpg',
     videoUrl: 'https://vimeo.com/382879350',
     year: '2024'
   },
@@ -52,7 +58,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: '6',
     title: 'Highland Soul',
     location: 'Isle of Skye, Scotland',
-    coverImage: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2070',
+    coverImage: './cover6.jpg',
     videoUrl: 'https://vimeo.com/382879350',
     year: '2023'
   }
