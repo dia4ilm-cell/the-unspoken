@@ -38,7 +38,6 @@ const Portfolio: React.FC = () => {
     <div className="pt-32 pb-24 px-6 fade-in">
       <div className="container mx-auto">
         <header className="text-center mb-24 max-w-2xl mx-auto">
-          <span className="text-black/30 tracking-[0.4em] text-[10px] uppercase block mb-6 font-bold">Our Work</span>
           <h1 className="text-5xl md:text-7xl font-serif mb-8">The Portfolio</h1>
           <p className="text-black/60 font-light leading-loose mb-8">
             A collection of cinematic memories captured across the globe. Each film is uniquely tailored to the couple's rhythm, aesthetic, and soul.
