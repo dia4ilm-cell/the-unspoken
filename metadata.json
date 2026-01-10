@@ -1,0 +1,8 @@
+{
+  "name": "Sharipov Video Production - Luxury Wedding Videography",
+  "description": "A minimalist luxury portfolio for high-end wedding videographer Sharipov, featuring cinematic storytelling and sophisticated design.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
