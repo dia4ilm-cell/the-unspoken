@@ -31,10 +31,19 @@
         }
     </script>
     <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
         body {
             background-color: #FFFFFF;
             color: #000000;
             scroll-behavior: smooth;
+            overflow-x: hidden; /* Prevent horizontal scroll issues */
+            -webkit-overflow-scrolling: touch;
         }
         
         .fade-in {
@@ -92,16 +101,9 @@
 </head>
 <body>
     <div id="root"></div>
-    
-    <!-- This script tag is required to load your React application -->
     <script type="module" src="index.tsx"></script>
 
     <script>
-        /**
-         * Enhanced Reveal Logic using IntersectionObserver.
-         * This ensures that elements already in the viewport (like the top of the About page)
-         * are revealed immediately upon navigation without needing a scroll event.
-         */
         const initObserver = () => {
             const observerOptions = {
                 threshold: 0.1,
@@ -112,23 +114,18 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        // Once revealed, we can stop observing this element
                         observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
-            // Function to find and observe elements
             const observeElements = () => {
                 const reveals = document.querySelectorAll('.reveal:not(.active)');
                 reveals.forEach(el => observer.observe(el));
             };
 
-            // Run initially
             observeElements();
 
-            // Since this is a SPA, we need to check for new elements periodically 
-            // as the user navigates between routes.
             const mutationObserver = new MutationObserver(() => {
                 observeElements();
             });
@@ -139,7 +136,6 @@
             });
         };
 
-        // Initialize when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initObserver);
         } else {

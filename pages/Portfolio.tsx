@@ -1,12 +1,25 @@
 
-// Fix: Import React and use React.FC for the component type
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PORTFOLIO_DATA } from '../constants';
 import { PortfolioItem } from '../types';
 
 const Portfolio: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
   const vimeoLibraryUrl = "https://vimeo.com/priorityfilm";
+
+  // Manage body overflow when lightbox is open
+  useEffect(() => {
+    if (selectedVideo) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedVideo]);
 
   const getEmbedUrl = (url: string) => {
     if (url === '#') return '#';
@@ -22,7 +35,6 @@ const Portfolio: React.FC = () => {
   const openLightbox = (item: PortfolioItem) => {
     if (item.videoUrl !== '#') {
       setSelectedVideo(item);
-      document.body.style.overflow = 'hidden';
     } else {
       window.open(vimeoLibraryUrl, '_blank');
     }
@@ -30,7 +42,6 @@ const Portfolio: React.FC = () => {
 
   const closeLightbox = () => {
     setSelectedVideo(null);
-    document.body.style.overflow = 'unset';
   };
 
   return (
@@ -55,7 +66,7 @@ const Portfolio: React.FC = () => {
               <div className="relative overflow-hidden aspect-video mb-8 bg-gray-50 shadow-sm border border-black/5">
                 <img 
                   src={item.coverImage} 
-                  alt="" // Empty alt to prevent showing title when image is broken during transition
+                  alt="" 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.opacity = '0';

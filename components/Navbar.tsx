@@ -17,7 +17,15 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    // Ensure scroll is restored when navigating away from an open mobile menu
+    document.body.style.overflow = 'unset';
   }, [location]);
+
+  const toggleMobileMenu = () => {
+    const newState = !isMobileMenuOpen;
+    setIsMobileMenuOpen(newState);
+    document.body.style.overflow = newState ? 'hidden' : 'unset';
+  };
 
   const navLinks = [
     { name: 'HOME', path: '/' },
@@ -50,7 +58,7 @@ const Navbar: React.FC = () => {
 
           {/* Hamburger Button */}
           <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={toggleMobileMenu}
             className="md:hidden z-[110] relative p-2"
             aria-label="Toggle Menu"
           >
@@ -62,7 +70,7 @@ const Navbar: React.FC = () => {
       </nav>
 
       {/* Fullscreen Mobile Menu Overlay */}
-      <div className={`fixed inset-0 bg-white z-[90] transition-transform duration-700 ease-in-out flex flex-col items-center justify-center space-y-12 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed inset-0 bg-white z-[90] transition-transform duration-700 ease-in-out flex flex-col items-center justify-center space-y-12 ${isMobileMenuOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}>
         {navLinks.map((link) => (
           <Link
             key={link.path}
