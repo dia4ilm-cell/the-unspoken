@@ -20,28 +20,28 @@ const Navbar: React.FC = () => {
   }, [location]);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Portfolio', path: '/portfolio' },
-    { name: 'About', path: '/about' },
-    { name: 'Inquire', path: '/contact' },
+    { name: 'HOME', path: '/' },
+    { name: 'PORTFOLIO', path: '/portfolio' },
+    { name: 'ABOUT', path: '/about' },
+    { name: 'INQUIRE', path: '/contact' },
   ];
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-700 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-8'}`}>
-        <div className="container mx-auto px-6 flex justify-between items-center text-black">
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-700 ${isScrolled ? 'bg-white/95 backdrop-blur-md py-5 shadow-sm' : 'bg-transparent py-10'}`}>
+        <div className="container mx-auto px-10 flex justify-between items-center text-black">
           <Link to="/" className="flex items-baseline gap-3 group">
-            <span className="text-xl md:text-2xl font-serif tracking-[0.2em] uppercase font-bold">Sharipov</span> 
-            <span className="text-[9px] md:text-[10px] tracking-[0.5em] uppercase opacity-40 font-sans font-light">Production</span>
+            <span className="text-xl md:text-2xl font-serif tracking-[0.3em] uppercase font-bold">Sharipov</span> 
+            <span className="text-[8px] md:text-[9px] tracking-[0.6em] uppercase opacity-30 font-sans font-light">Production</span>
           </Link>
           
           {/* Desktop Nav */}
-          <div className="hidden md:flex space-x-12">
+          <div className="hidden md:flex space-x-12 items-center">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-[9px] uppercase tracking-[0.5em] hover:opacity-100 transition-all duration-500 ${location.pathname === link.path ? 'opacity-100 font-bold border-b border-black/20 pb-1' : 'opacity-40 font-light'}`}
+                className={`text-[9px] tracking-[0.4em] transition-all duration-500 hover:opacity-100 ${location.pathname === link.path ? 'opacity-100 font-bold' : 'opacity-30 font-light'}`}
               >
                 {link.name}
               </Link>

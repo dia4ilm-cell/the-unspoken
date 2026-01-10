@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+// Fix: Import React and use React.FC for the component type
+import React, { useState } from 'react';
 import { PORTFOLIO_DATA } from '../constants';
 import { PortfolioItem } from '../types';
 
@@ -33,21 +34,17 @@ const Portfolio: React.FC = () => {
   };
 
   return (
-    <div className="pt-32 pb-24 px-6 fade-in">
-      <div className="container mx-auto">
-        <header className="text-center mb-24 max-w-2xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif mb-12 uppercase" style={{ letterSpacing: '0.35em' }}>Explore</h1>
-          <a 
-            href={vimeoLibraryUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-block uppercase text-black border border-black/20 px-10 py-4 hover:bg-black hover:text-white transition-all duration-700"
-            style={{ letterSpacing: '0.35em', fontSize: '0.65rem' }}
-          >
-            Watch Full Library on Vimeo
-          </a>
+    <div className="pt-40 pb-24 px-6 fade-in bg-white text-black">
+      <div className="container mx-auto max-w-6xl">
+        {/* Editorial Header */}
+        <header className="mb-24">
+          <span className="text-black/40 tracking-[0.5em] text-[10px] uppercase block mb-6 font-bold">The Work</span>
+          <h1 className="text-[3.375rem] md:text-[5.4rem] font-serif mb-6 leading-tight tracking-[-0.015em] font-normal">
+            The <span className="italic">Portfolio</span>
+          </h1>
         </header>
 
+        {/* Portfolio Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
           {PORTFOLIO_DATA.map((item) => (
             <div 
@@ -79,25 +76,39 @@ const Portfolio: React.FC = () => {
             </div>
           ))}
         </div>
+
+        {/* Call to Action Button - Now at the bottom */}
+        <div className="mt-32 text-center">
+          <a 
+            href={vimeoLibraryUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block uppercase text-black border border-black/20 px-12 py-5 hover:bg-black hover:text-white transition-all duration-700"
+            style={{ letterSpacing: '0.25em', fontSize: '0.65rem' }}
+          >
+            View Complete Collection
+          </a>
+        </div>
       </div>
 
+      {/* Video Lightbox */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/98 backdrop-blur-3xl p-4 md:p-8 transition-opacity duration-500">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-white p-0 transition-opacity duration-700 overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0.03)_0%,_rgba(255,255,255,1)_70%)]"></div>
           <div className="absolute inset-0 cursor-zoom-out" onClick={closeLightbox}></div>
           
           <button 
             onClick={closeLightbox}
-            className="absolute top-4 right-4 md:top-8 md:right-8 text-white/50 hover:text-white transition-all p-2 z-[1010]"
+            className="absolute top-8 right-8 text-black/30 hover:text-black transition-all p-2 z-[1010]"
             aria-label="Close"
           >
-            <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12"></path>
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
           
-          <div className="relative w-full max-w-6xl z-10 flex flex-col items-center animate-fade-in">
-            <div className="w-full bg-black shadow-2xl border border-white/5 overflow-hidden flex items-center justify-center" 
-                 style={{ maxHeight: '70vh', aspectRatio: '16/9' }}>
+          <div className="relative w-full max-w-5xl z-10 flex flex-col items-center animate-fade-in px-4">
+            <div className="w-full bg-black shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)] overflow-hidden flex items-center justify-center aspect-video">
               <iframe 
                 src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
                 className="w-full h-full"
@@ -107,11 +118,11 @@ const Portfolio: React.FC = () => {
               ></iframe>
             </div>
             
-            <div className="mt-6 md:mt-10 text-center text-white w-full px-4 select-none">
-              <p className="uppercase mb-2 opacity-50 font-bold" style={{ letterSpacing: '0.5em', fontSize: '0.65rem' }}>
-                {selectedVideo.location} • {selectedVideo.year}
+            <div className="mt-16 text-center text-black w-full select-none">
+              <p className="uppercase mb-4 opacity-40 font-medium" style={{ letterSpacing: '0.6em', fontSize: '0.55rem' }}>
+                {selectedVideo.location.toUpperCase()} • {selectedVideo.year}
               </p>
-              <h2 className="text-xl md:text-3xl font-serif italic text-white/90">
+              <h2 className="text-4xl md:text-5xl font-serif italic text-black/90 tracking-tight">
                 {selectedVideo.title}
               </h2>
             </div>
