@@ -97,18 +97,54 @@
     <script type="module" src="index.tsx"></script>
 
     <script>
-        // Simple Scroll Reveal Logic
-        window.addEventListener('scroll', () => {
-            const reveals = document.querySelectorAll('.reveal');
-            reveals.forEach(reveal => {
-                const windowHeight = window.innerHeight;
-                const revealTop = reveal.getBoundingClientRect().top;
-                const revealPoint = 150;
-                if (revealTop < windowHeight - revealPoint) {
-                    reveal.classList.add('active');
-                }
+        /**
+         * Enhanced Reveal Logic using IntersectionObserver.
+         * This ensures that elements already in the viewport (like the top of the About page)
+         * are revealed immediately upon navigation without needing a scroll event.
+         */
+        const initObserver = () => {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Once revealed, we can stop observing this element
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Function to find and observe elements
+            const observeElements = () => {
+                const reveals = document.querySelectorAll('.reveal:not(.active)');
+                reveals.forEach(el => observer.observe(el));
+            };
+
+            // Run initially
+            observeElements();
+
+            // Since this is a SPA, we need to check for new elements periodically 
+            // as the user navigates between routes.
+            const mutationObserver = new MutationObserver(() => {
+                observeElements();
             });
-        });
+
+            mutationObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        };
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initObserver);
+        } else {
+            initObserver();
+        }
     </script>
 </body>
 </html>
