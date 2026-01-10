@@ -1,22 +1,13 @@
 
 import { PortfolioItem } from './types';
 
-/**
- * ИНСТРУКЦИЯ:
- * Вы загрузили 'cover2.jpg'. В коде ниже для второго элемента 
- * теперь прописан путь './cover2.jpg'. 
- * 
- * Если вы загрузите 'cover1.jpg', 'cover3.jpg' и т.д., 
- * просто меняйте ссылки ниже на локальные пути.
- */
-
 export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: '1',
-    title: 'Eternal Love',
+    title: 'Two of US in Paris',
     location: 'Paris, France',
-    // Оставляем временную ссылку, пока не загрузите cover1.jpg
-    coverImage: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069', 
+    // Используем качественную ссылку с Unsplash, похожую на ваше фото
+    coverImage: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?q=80&w=2000', 
     videoUrl: 'https://vimeo.com/382879350',
     year: '2024'
   },
@@ -24,8 +15,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: '2',
     title: 'Hummingbird Nest Ranch',
     location: 'California, USA',
-    // ТЕПЕРЬ ИСПОЛЬЗУЕТСЯ ВАШ ФАЙЛ:
-    coverImage: './cover2.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070',
     videoUrl: 'https://vimeo.com/1098693064', 
     year: '2023'
   },
@@ -47,9 +37,9 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   },
   {
     id: '5',
-    title: 'City Lights',
-    location: 'New York, USA',
-    coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070',
+    title: 'Amalfi Coast',
+    location: 'Positano, Italy',
+    coverImage: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1974',
     videoUrl: 'https://vimeo.com/382879350',
     year: '2024'
   },

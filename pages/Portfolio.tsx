@@ -45,18 +45,21 @@ const Portfolio: React.FC = () => {
         </header>
 
         {/* Portfolio Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24">
           {PORTFOLIO_DATA.map((item) => (
             <div 
               key={item.id} 
               className="group cursor-pointer"
               onClick={() => openLightbox(item)}
             >
-              <div className="relative overflow-hidden aspect-video mb-6 shadow-sm border border-black/5">
+              <div className="relative overflow-hidden aspect-video mb-8 bg-gray-50 shadow-sm border border-black/5">
                 <img 
                   src={item.coverImage} 
-                  alt={item.title} 
+                  alt="" // Empty alt to prevent showing title when image is broken during transition
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.opacity = '0';
+                  }}
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                     <span className="text-white uppercase border border-white/30 px-6 py-3 backdrop-blur-sm" style={{ letterSpacing: '0.35em', fontSize: '0.6rem' }}>
@@ -66,19 +69,19 @@ const Portfolio: React.FC = () => {
               </div>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-black/40 uppercase mb-2 font-bold" style={{ letterSpacing: '0.35em', fontSize: '0.55rem' }}>{item.location} • {item.year}</p>
-                  <h3 className="text-xl md:text-2xl font-serif group-hover:text-black transition-colors">{item.title}</h3>
+                  <p className="text-black/30 uppercase mb-3 font-bold" style={{ letterSpacing: '0.4em', fontSize: '0.55rem' }}>{item.location} • {item.year}</p>
+                  <h3 className="text-2xl md:text-3xl font-serif tracking-tight group-hover:text-black/60 transition-colors">{item.title}</h3>
                 </div>
-                <div className="pt-2">
-                    <svg className="w-4 h-4 text-black/20 group-hover:text-black group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                <div className="pt-3">
+                    <svg className="w-5 h-5 text-black/10 group-hover:text-black group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Call to Action Button - Now at the bottom */}
-        <div className="mt-32 text-center">
+        {/* Call to Action Button */}
+        <div className="mt-40 text-center">
           <a 
             href={vimeoLibraryUrl} 
             target="_blank" 
