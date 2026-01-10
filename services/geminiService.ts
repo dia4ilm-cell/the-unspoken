@@ -1,12 +1,21 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
 export const getVisionAssistance = async (roughNotes: string) => {
-  if (!process.env.API_KEY) return null;
+  // Safe check for API key to prevent crashes in browser environments
+  const getApiKey = () => {
+    try {
+      return process.env.API_KEY;
+    } catch (e) {
+      return undefined;
+    }
+  };
+
+  const apiKey = getApiKey();
+  if (!apiKey) return null;
   
   try {
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `You are Sharipov, a luxury wedding videographer. A couple gave you these rough notes about their wedding vision: "${roughNotes}". 
