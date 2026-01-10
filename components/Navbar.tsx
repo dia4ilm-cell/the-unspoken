@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -14,6 +15,11 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Portfolio', path: '/portfolio' },
@@ -22,32 +28,56 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white/95 backdrop-blur-sm py-4 border-b border-black/10' : 'bg-transparent py-8'}`}>
-      <div className="container mx-auto px-6 flex justify-between items-center text-black">
-        <Link to="/" className="text-xl md:text-2xl font-serif tracking-[0.2em] uppercase flex flex-col md:flex-row md:gap-3 items-center transition-colors duration-500">
-          <span className="font-bold">Sharipov</span> 
-          <span className="text-xs md:text-sm tracking-[0.4em] opacity-60 font-sans mt-1 md:mt-2">Cinematography</span>
-        </Link>
-        
-        <div className="hidden md:flex space-x-12">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`text-[10px] uppercase tracking-[0.4em] hover:opacity-100 transition-all duration-500 ${location.pathname === link.path ? 'opacity-100 font-bold border-b border-black pb-1' : 'opacity-40 font-light'}`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+    <>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-700 ${isScrolled ? 'bg-white/90 backdrop-blur-md py-4' : 'bg-transparent py-8'}`}>
+        <div className="container mx-auto px-6 flex justify-between items-center text-black">
+          <Link to="/" className="text-xl md:text-2xl font-serif tracking-[0.2em] uppercase flex flex-col md:flex-row md:gap-3 items-center">
+            <span className="font-bold">Sharipov</span> 
+            <span className="text-[10px] md:text-xs tracking-[0.5em] opacity-40 font-sans mt-1 md:mt-2">Production</span>
+          </Link>
+          
+          {/* Desktop Nav */}
+          <div className="hidden md:flex space-x-12">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`text-[9px] uppercase tracking-[0.5em] hover:opacity-100 transition-all duration-500 hover-scale ${location.pathname === link.path ? 'opacity-100 font-bold' : 'opacity-40 font-light'}`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
 
-        <div className="md:hidden text-black">
-            <button className="focus:outline-none">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
+          {/* Hamburger Button */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden z-[110] relative p-2"
+          >
+            <div className={`w-6 h-0.5 bg-black transition-all mb-1.5 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
+            <div className={`w-6 h-0.5 bg-black transition-all ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}></div>
+            <div className={`w-6 h-0.5 bg-black transition-all mt-1.5 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
+          </button>
+        </div>
+      </nav>
+
+      {/* Fullscreen Mobile Menu Overlay */}
+      <div className={`fixed inset-0 bg-white z-[90] transition-transform duration-700 ease-in-out flex flex-col items-center justify-center space-y-12 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        {navLinks.map((link) => (
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`text-4xl font-serif tracking-tight ${location.pathname === link.path ? 'italic' : 'font-light opacity-50'}`}
+          >
+            {link.name}
+          </Link>
+        ))}
+        <div className="pt-12 flex space-x-8 opacity-40">
+           <a href="#" className="text-[10px] tracking-[0.3em] uppercase">Instagram</a>
+           <a href="#" className="text-[10px] tracking-[0.3em] uppercase">Vimeo</a>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 
