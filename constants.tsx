@@ -18,7 +18,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   },
   {
     id: '2',
-    title: 'Ranch Elegance',
+    title: 'Hummingbird Nest Ranch',
     location: 'California, USA',
     coverImage: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1974',
     videoUrl: 'https://vimeo.com/1098693064?fl=pl&fe=cm', 
