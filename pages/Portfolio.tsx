@@ -107,38 +107,56 @@ const Portfolio: React.FC = () => {
 
       {/* Video Lightbox */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-white p-0 transition-opacity duration-700 overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0.03)_0%,_rgba(255,255,255,1)_70%)]"></div>
-          <div className="absolute inset-0 cursor-zoom-out" onClick={closeLightbox}></div>
-          
-          <button 
-            onClick={closeLightbox}
-            className="absolute top-8 right-8 text-black/30 hover:text-black transition-all p-2 z-[1010]"
-            aria-label="Close"
-          >
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-          
-          <div className="relative w-full max-w-5xl z-10 flex flex-col items-center animate-fade-in px-4">
-            <div className="w-full bg-black shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)] overflow-hidden flex items-center justify-center aspect-video">
-              <iframe 
-                src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
-                className="w-full h-full"
-                frameBorder="0" 
-                allow="autoplay; fullscreen; picture-in-picture" 
-                allowFullScreen
-              ></iframe>
-            </div>
+        <div className="fixed inset-0 z-[1000] bg-white flex flex-col">
+          {/* Layer 1: Fixed Controls (Always on top) */}
+          <div className="fixed top-0 left-0 w-full h-0 z-[1050] flex justify-end p-8 pointer-events-none">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                closeLightbox();
+              }}
+              className="text-black/30 hover:text-black transition-all p-2 pointer-events-auto bg-white/50 backdrop-blur-md rounded-full shadow-sm md:bg-transparent md:backdrop-blur-none md:shadow-none"
+              aria-label="Close"
+            >
+              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          {/* Layer 2: Scrollable Content Container */}
+          <div className="absolute inset-0 overflow-y-auto z-[1000] scroll-smooth">
+            {/* Background decoration */}
+            <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,0,0,0.03)_0%,_rgba(255,255,255,1)_70%)] pointer-events-none -z-10"></div>
             
-            <div className="mt-16 text-center text-black w-full select-none">
-              <p className="uppercase mb-4 opacity-40 font-medium" style={{ letterSpacing: '0.6em', fontSize: '0.55rem' }}>
-                {selectedVideo.location.toUpperCase()} • {selectedVideo.year}
-              </p>
-              <h2 className="text-4xl md:text-5xl font-serif italic text-black/90 tracking-tight">
-                {selectedVideo.title}
-              </h2>
+            {/* Backdrop Click Area */}
+            <div className="absolute inset-0 cursor-zoom-out min-h-full" onClick={closeLightbox}></div>
+            
+            {/* Main Content */}
+            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center py-24 md:py-32 px-4 md:px-10">
+              <div className="w-full max-w-6xl animate-fade-in pointer-events-auto">
+                {/* Video Container */}
+                <div className="w-full bg-black shadow-[0_60px_120px_-20px_rgba(0,0,0,0.3)] overflow-hidden aspect-video">
+                  <iframe 
+                    src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
+                    className="w-full h-full"
+                    frameBorder="0" 
+                    allow="autoplay; fullscreen; picture-in-picture" 
+                    allowFullScreen
+                  ></iframe>
+                </div>
+                
+                {/* Info section below video */}
+                <div className="mt-16 text-center text-black select-none max-w-3xl mx-auto">
+                  <p className="uppercase mb-4 opacity-40 font-bold" style={{ letterSpacing: '0.6em', fontSize: '0.6rem' }}>
+                    {selectedVideo.location.toUpperCase()} • {selectedVideo.year}
+                  </p>
+                  <h2 className="text-4xl md:text-6xl font-serif italic text-black/90 tracking-tight leading-tight">
+                    {selectedVideo.title}
+                  </h2>
+                  <div className="mt-12 w-12 h-[1px] bg-black/10 mx-auto"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
