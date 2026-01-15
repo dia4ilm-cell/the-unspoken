@@ -11,15 +11,19 @@ const Portfolio: React.FC = () => {
     setSelectedVideo(null);
   }, []);
 
-  // Keyboard navigation
+  // Keyboard navigation and body scroll lock
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeLightbox();
     };
+
     if (selectedVideo) {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
@@ -32,7 +36,7 @@ const Portfolio: React.FC = () => {
     
     const match = url.match(/vimeo\.com\/(\d+)/);
     if (match && match[1]) {
-      return `https://player.vimeo.com/video/${match[1]}`;
+      return `https://player.vimeo.com/video/${match[1]}?autoplay=1&title=0&byline=0&portrait=0&color=000000`;
     }
     return url;
   };
@@ -46,7 +50,7 @@ const Portfolio: React.FC = () => {
   };
 
   return (
-    <div className="pt-40 pb-24 px-6 fade-in bg-white text-black">
+    <div className="pt-40 pb-24 px-6 fade-in bg-white text-black relative">
       <div className="container mx-auto max-w-6xl">
         {/* Editorial Header */}
         <header className="mb-24">
@@ -75,7 +79,7 @@ const Portfolio: React.FC = () => {
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                     <span className="text-white uppercase border border-white/30 px-6 py-3 backdrop-blur-sm" style={{ letterSpacing: '0.35em', fontSize: '0.6rem' }}>
-                      {item.videoUrl === '#' ? 'View on Vimeo' : 'Play Film'}
+                      Play Film
                     </span>
                 </div>
               </div>
@@ -105,43 +109,37 @@ const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* Video Lightbox */}
+      {/* Robust Fullscreen Lightbox */}
       {selectedVideo && (
-        <div 
-          className="fixed inset-0 z-[2000] bg-white flex flex-col overflow-y-auto"
-          id="video-modal"
-        >
-          {/* Static UI Layer: Fixed Close Button */}
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              closeLightbox();
-            }}
-            className="fixed top-8 right-8 md:top-12 md:right-12 z-[2100] group p-2"
-            aria-label="Close modal"
-          >
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <div className="absolute inset-0 bg-black/5 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-              <svg className="w-10 h-10 text-black/30 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
+        <div className="fixed inset-0 z-[9999] bg-white flex flex-col overflow-y-auto">
+          {/* Header UI inside Modal */}
+          <div className="sticky top-0 w-full flex justify-between items-center p-8 md:p-12 bg-white/80 backdrop-blur-md z-[10001]">
+            <div className="flex items-baseline gap-3">
+              <span className="text-lg md:text-xl font-serif tracking-[0.3em] uppercase font-bold">Sharipov</span> 
+              <span className="text-[7px] md:text-[8px] tracking-[0.5em] uppercase opacity-30 font-sans font-light hidden sm:inline">Production</span>
             </div>
-          </button>
-
-          {/* Scrollable Content Layer */}
-          <div 
-            className="flex-grow flex flex-col items-center justify-center p-6 py-24 md:py-40 cursor-zoom-out"
-            onClick={closeLightbox}
-          >
-            {/* Inner Content - click inside doesn't close */}
-            <div 
-              className="w-full max-w-6xl cursor-default animate-fade-in"
-              onClick={(e) => e.stopPropagation()}
+            
+            <button 
+              onClick={closeLightbox}
+              className="flex items-center gap-4 group"
+              aria-label="Close"
             >
+              <span className="text-[9px] tracking-[0.4em] uppercase font-bold opacity-30 group-hover:opacity-100 transition-opacity">Close</span>
+              <div className="w-10 h-10 border border-black/10 rounded-full flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-500">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </div>
+            </button>
+          </div>
+
+          {/* Video & Info Section */}
+          <div className="flex-grow flex flex-col items-center justify-center px-6 py-12 md:py-24">
+            <div className="w-full max-w-6xl animate-fade-in">
               <div className="relative w-full aspect-video bg-black shadow-[0_60px_100px_-20px_rgba(0,0,0,0.2)]">
                 <iframe 
-                  src={`${getEmbedUrl(selectedVideo.videoUrl)}?autoplay=1&title=0&byline=0&portrait=0`}
-                  className="w-full h-full"
+                  src={getEmbedUrl(selectedVideo.videoUrl)}
+                  className="absolute inset-0 w-full h-full"
                   frameBorder="0" 
                   allow="autoplay; fullscreen; picture-in-picture" 
                   allowFullScreen
@@ -149,15 +147,15 @@ const Portfolio: React.FC = () => {
               </div>
 
               <div className="mt-16 md:mt-24 text-center max-w-3xl mx-auto pb-20">
-                <p className="uppercase mb-6 opacity-40 font-bold tracking-[0.6em] text-[10px]">
-                  {selectedVideo.location.toUpperCase()} • {selectedVideo.year}
+                <p className="text-[10px] uppercase tracking-[0.6em] text-black/30 font-bold mb-6">
+                  {selectedVideo.location.toUpperCase()} &bull; {selectedVideo.year}
                 </p>
-                <h2 className="text-4xl md:text-7xl font-serif italic text-black/90 tracking-tight leading-tight mb-12">
+                <h2 className="text-4xl md:text-7xl font-serif italic text-black/90 tracking-tight leading-tight">
                   {selectedVideo.title}
                 </h2>
-                <div className="w-12 h-[1px] bg-black/10 mx-auto"></div>
-                <div className="mt-12 text-black/30 text-[9px] uppercase tracking-[0.5em] font-light">
-                  Sharipov Production &copy; {selectedVideo.year}
+                <div className="mt-16 w-12 h-[1px] bg-black/10 mx-auto"></div>
+                <div className="mt-12 text-black/20 text-[8px] uppercase tracking-[0.5em] font-light">
+                  Cinematic Legacy by Maksud Sharipov
                 </div>
               </div>
             </div>
