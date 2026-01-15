@@ -30,15 +30,32 @@ const Portfolio: React.FC = () => {
     };
   }, [selectedVideo, closeLightbox]);
 
+  // Extracts Vimeo ID to get either the embed URL or a thumbnail
+  const getVimeoInfo = (url: string) => {
+    const match = url.match(/vimeo\.com\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
   const getEmbedUrl = (url: string) => {
     if (url === '#') return '#';
     if (url.includes('player.vimeo.com')) return url;
     
-    const match = url.match(/vimeo\.com\/(\d+)/);
-    if (match && match[1]) {
-      return `https://player.vimeo.com/video/${match[1]}?autoplay=1&title=0&byline=0&portrait=0&color=000000`;
+    const vimeoId = getVimeoInfo(url);
+    if (vimeoId) {
+      // REMOVED autoplay=1 to show original cover/poster
+      return `https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0&color=ffffff`;
     }
     return url;
+  };
+
+  // Helper to get original vimeo thumbnail for the grid
+  const getOriginalThumbnail = (item: PortfolioItem) => {
+    const vimeoId = getVimeoInfo(item.videoUrl);
+    if (vimeoId) {
+      // Using vumbnail service to get the actual vimeo cover image
+      return `https://vumbnail.com/${vimeoId}.jpg`;
+    }
+    return item.coverImage;
   };
 
   const openLightbox = (item: PortfolioItem) => {
@@ -68,19 +85,17 @@ const Portfolio: React.FC = () => {
               className="group cursor-pointer"
               onClick={() => openLightbox(item)}
             >
-              <div className="relative overflow-hidden aspect-video mb-8 bg-gray-50 shadow-sm border border-black/5">
+              <div className="relative overflow-hidden aspect-video mb-8 bg-black shadow-sm border border-black/5">
                 <img 
-                  src={item.coverImage} 
-                  alt="" 
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.opacity = '0';
-                  }}
+                  src={getOriginalThumbnail(item)} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                    <span className="text-white uppercase border border-white/30 px-6 py-3 backdrop-blur-sm" style={{ letterSpacing: '0.35em', fontSize: '0.6rem' }}>
-                      Play Film
-                    </span>
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <div className="w-16 h-16 border border-white/40 rounded-full flex items-center justify-center backdrop-blur-sm">
+                       <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                    </div>
                 </div>
               </div>
               <div className="flex justify-between items-start">
@@ -113,7 +128,7 @@ const Portfolio: React.FC = () => {
       {selectedVideo && (
         <div className="fixed inset-0 z-[9999] bg-white flex flex-col overflow-y-auto">
           {/* Header UI inside Modal */}
-          <div className="sticky top-0 w-full flex justify-between items-center p-8 md:p-12 bg-white/80 backdrop-blur-md z-[10001]">
+          <div className="sticky top-0 w-full flex justify-between items-center p-8 md:p-12 bg-white/95 backdrop-blur-md z-[10001] border-b border-black/5">
             <div className="flex items-baseline gap-3">
               <span className="text-lg md:text-xl font-serif tracking-[0.3em] uppercase font-bold">Sharipov</span> 
               <span className="text-[7px] md:text-[8px] tracking-[0.5em] uppercase opacity-30 font-sans font-light hidden sm:inline">Production</span>
@@ -121,7 +136,7 @@ const Portfolio: React.FC = () => {
             
             <button 
               onClick={closeLightbox}
-              className="flex items-center gap-4 group"
+              className="flex items-center gap-4 group px-4 py-2"
               aria-label="Close"
             >
               <span className="text-[9px] tracking-[0.4em] uppercase font-bold opacity-30 group-hover:opacity-100 transition-opacity">Close</span>
