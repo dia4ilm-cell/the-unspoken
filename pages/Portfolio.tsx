@@ -42,20 +42,24 @@ const Portfolio: React.FC = () => {
     
     const vimeoId = getVimeoInfo(url);
     if (vimeoId) {
-      // REMOVED autoplay=1 to show original cover/poster
-      return `https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0&color=ffffff`;
+      return `https://player.vimeo.com/video/${vimeoId}?title=0&byline=0&portrait=0&color=ffffff&autoplay=1`;
     }
     return url;
   };
 
-  // Helper to get original vimeo thumbnail for the grid
-  const getOriginalThumbnail = (item: PortfolioItem) => {
+  /**
+   * Logic: Exclusively fetch Vimeo thumbnail for all videos.
+   * Using vumbnail.com is a standard way to get high-quality 
+   * static thumbnails for Vimeo videos without needing an API key.
+   */
+  const getThumbnail = (item: PortfolioItem) => {
     const vimeoId = getVimeoInfo(item.videoUrl);
     if (vimeoId) {
-      // Using vumbnail service to get the actual vimeo cover image
+      // Returns a high-res JPG from the Vimeo video ID
       return `https://vumbnail.com/${vimeoId}.jpg`;
     }
-    return item.coverImage;
+    // Fallback if no ID found
+    return 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070';
   };
 
   const openLightbox = (item: PortfolioItem) => {
@@ -87,10 +91,14 @@ const Portfolio: React.FC = () => {
             >
               <div className="relative overflow-hidden aspect-video mb-8 bg-black shadow-sm border border-black/5">
                 <img 
-                  src={getOriginalThumbnail(item)} 
+                  src={getThumbnail(item)} 
                   alt={item.title} 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-90 group-hover:opacity-100"
                   loading="lazy"
+                  onError={(e) => {
+                    // Fallback in case of individual thumbnail load failure
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070';
+                  }}
                 />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                     <div className="w-16 h-16 border border-white/40 rounded-full flex items-center justify-center backdrop-blur-sm">
