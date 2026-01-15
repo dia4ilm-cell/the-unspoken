@@ -13,10 +13,10 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   {
     id: '2',
     title: 'Wedding in Piocho Ranch',
-    location: 'Simi Valley, USA',
+    location: 'Santa Barbara, USA',
     coverImage: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070',
     videoUrl: 'https://vimeo.com/1098693064', 
-    year: '2025'
+    year: '2024'
   },
   {
     id: '3',
@@ -32,15 +32,15 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     location: 'California, USA',
     coverImage: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073',
     videoUrl: 'https://vimeo.com/1114094505',
-    year: '2024'
+    year: '2025'
   },
   {
     id: '5',
-    title: 'Amalfi Coast',
-    location: 'Positano, Italy',
+    title: 'Sufi Night',
+    location: 'Bay Area, USA',
     coverImage: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1974',
-    videoUrl: 'https://vimeo.com/382879350',
-    year: '2024'
+    videoUrl: 'https://vimeo.com/1085343452',
+    year: '2025'
   },
   {
     id: '6',
