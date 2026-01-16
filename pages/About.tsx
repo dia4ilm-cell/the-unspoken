@@ -6,13 +6,23 @@ const About: React.FC = () => {
     <div className="pt-40 pb-24 bg-white text-black">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center mb-32">
-          {/* Added fade-in to ensure immediate visibility of top content */}
+          {/* Main Portrait Section */}
           <div className="relative order-2 lg:order-1 fade-in">
             <div className="absolute -top-10 -left-10 w-full h-full border border-black/5 -z-10 hidden md:block"></div>
+            {/* 
+                ВАЖНО: Добавлено 'object-top', чтобы голова не обрезалась сверху. 
+                Если нужно еще ниже, можно использовать 'object-[center_20%]'
+            */}
             <img 
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974" 
-              alt="Maksud Sharipov Portrait" 
-              className="w-full aspect-[4/5] object-cover shadow-2xl"
+              src="maksud.jpg" 
+              alt="Maksud Sharipov" 
+              className="w-full aspect-[4/5] object-cover object-top shadow-2xl"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                if (!img.src.includes('ik.imagekit.io')) {
+                   img.src = "https://ik.imagekit.io/wdrlvk52g/maksud.jpg";
+                }
+              }}
             />
             <div className="absolute bottom-6 right-6 text-black text-right hidden md:block">
                 <span className="font-signature text-4xl block">Maksud Sharipov</span>
@@ -44,7 +54,7 @@ const About: React.FC = () => {
           </div>
         </div>
 
-        {/* Process Section - Uses Reveal for scroll effects */}
+        {/* Process Section */}
         <div className="bg-white border-t border-b border-black/5 py-32 px-12 -mx-6 md:mx-0 reveal">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-20 text-center">
             <div className="reveal">
