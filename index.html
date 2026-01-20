@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=La+Belle+Aurore&display=swap" rel="stylesheet">
     <script>
+        // Polyfill for 'process' to prevent white screen error
+        window.process = { env: { API_KEY: "" } };
+        
         tailwind.config = {
             theme: {
                 extend: {
@@ -31,59 +34,14 @@
         }
     </script>
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100%;
-        }
-
-        body {
-            background-color: #FFFFFF;
-            color: #000000;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .fade-in {
-            animation: fadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        img {
-            filter: grayscale(100%);
-            transition: filter 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
-        .group:hover img, img:hover {
-            filter: grayscale(0%);
-        }
-
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FFFFFF;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #000000;
-        }
+        html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; }
+        body { background-color: #FFFFFF; color: #000000; scroll-behavior: smooth; overflow-x: hidden; }
+        .fade-in { animation: fadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        img { filter: grayscale(100%); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .group:hover img { filter: grayscale(0%); }
     </style>
 <script type="importmap">
 {
@@ -99,55 +57,23 @@
 </script>
 </head>
 <body>
-    <noscript>
-        <div style="text-align: center; padding: 50px; font-family: serif;">
-            <h1>Please enable JavaScript</h1>
-            <p>To view the Sharipov Video Production portfolio, JavaScript is required.</p>
-        </div>
-    </noscript>
-    
     <div id="root"></div>
-    
     <script type="module" src="index.tsx"></script>
-
     <script>
-        const initObserver = () => {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
+        // Intersection Observer for animations
+        document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        observer.unobserve(entry.target);
                     }
                 });
-            }, observerOptions);
-
-            const observeElements = () => {
-                const reveals = document.querySelectorAll('.reveal:not(.active)');
-                reveals.forEach(el => observer.observe(el));
-            };
-
-            observeElements();
-
-            const mutationObserver = new MutationObserver(() => {
-                observeElements();
-            });
-
-            mutationObserver.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        };
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initObserver);
-        } else {
-            initObserver();
-        }
+            }, { threshold: 0.1 });
+            
+            const observe = () => document.querySelectorAll('.reveal:not(.active)').forEach(el => observer.observe(el));
+            observe();
+            new MutationObserver(observe).observe(document.body, { childList: true, subtree: true });
+        });
     </script>
 </body>
 </html>
