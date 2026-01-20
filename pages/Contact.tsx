@@ -63,24 +63,9 @@ const Contact: React.FC = () => {
           <div>
             <span className="text-black/40 tracking-[0.5em] text-[10px] uppercase block mb-6 font-bold">Inquire</span>
             <h1 className="text-6xl md:text-8xl font-serif mb-12 leading-tight">Let's Create <span className="italic font-normal">History</span></h1>
-            <p className="text-black/60 font-light leading-loose text-lg mb-16">
-              I’d love to hear more about your celebration and how we can bring your vision to life.
+            <p className="text-black/60 font-light leading-loose text-lg">
+              I’d love to hear more about your celebration and how we can bring your vision to life. Please share your details, and I will reach out personally to discuss your cinematic legacy.
             </p>
-            
-            <div className="space-y-10">
-                <div>
-                    <p className="text-[9px] tracking-[0.5em] uppercase text-black font-bold mb-2">Email</p>
-                    <a href="mailto:inquiry@maxsharipov.com" className="text-2xl font-serif text-black hover:opacity-60 transition-opacity">
-                      inquiry@maxsharipov.com
-                    </a>
-                </div>
-                <div>
-                    <p className="text-[9px] tracking-[0.5em] uppercase text-black font-bold mb-2">Social</p>
-                    <a href="https://instagram.com/maksud_sharipov" target="_blank" rel="noopener noreferrer" className="text-2xl font-serif text-black hover:opacity-60 transition-opacity">
-                      @maksud_sharipov
-                    </a>
-                </div>
-            </div>
           </div>
 
           <div className="bg-white p-10 md:p-20 border border-black/10">
