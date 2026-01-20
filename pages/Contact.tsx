@@ -70,11 +70,15 @@ const Contact: React.FC = () => {
             <div className="space-y-10">
                 <div>
                     <p className="text-[9px] tracking-[0.5em] uppercase text-black font-bold mb-2">Email</p>
-                    <p className="text-2xl font-serif text-black">Sharipov.video@gmail.com</p>
+                    <a href="mailto:inquiry@maxsharipov.com" className="text-2xl font-serif text-black hover:opacity-60 transition-opacity">
+                      inquiry@maxsharipov.com
+                    </a>
                 </div>
                 <div>
                     <p className="text-[9px] tracking-[0.5em] uppercase text-black font-bold mb-2">Social</p>
-                    <p className="text-2xl font-serif text-black">@maksud_sharipov</p>
+                    <a href="https://instagram.com/maksud_sharipov" target="_blank" rel="noopener noreferrer" className="text-2xl font-serif text-black hover:opacity-60 transition-opacity">
+                      @maksud_sharipov
+                    </a>
                 </div>
             </div>
           </div>
