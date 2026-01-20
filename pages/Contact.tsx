@@ -15,6 +15,9 @@ const Contact: React.FC = () => {
   const [loadingVision, setLoadingVision] = useState(false);
   const [visionSuggestion, setVisionSuggestion] = useState<string | null>(null);
 
+  // Safe check for AI functionality availability
+  const isAiEnabled = typeof process !== 'undefined' && process.env && !!process.env.API_KEY;
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -23,11 +26,16 @@ const Contact: React.FC = () => {
   const handleVisionAssist = async () => {
     if (!formData.vision) return;
     setLoadingVision(true);
-    const suggestion = await getVisionAssistance(formData.vision);
-    if (suggestion) {
-      setVisionSuggestion(suggestion);
+    try {
+      const suggestion = await getVisionAssistance(formData.vision);
+      if (suggestion) {
+        setVisionSuggestion(suggestion);
+      }
+    } catch (err) {
+      console.error("AI Assist failed", err);
+    } finally {
+      setLoadingVision(false);
     }
-    setLoadingVision(false);
   };
 
   const applySuggestion = () => {
@@ -160,21 +168,23 @@ const Contact: React.FC = () => {
               <div className="py-4">
                 <label className="text-[9px] uppercase tracking-[0.4em] text-black/40 mb-4 block flex justify-between font-bold">
                   <span>Your Vision *</span>
-                  <button 
-                    type="button"
-                    onClick={handleVisionAssist}
-                    disabled={loadingVision || !formData.vision}
-                    className="text-black hover:underline disabled:opacity-30 flex items-center gap-2 transition-all decoration-1 underline-offset-4"
-                  >
-                    {loadingVision ? (
-                      <span className="animate-pulse">Refining...</span>
-                    ) : (
-                      <>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Artistic Assist
-                      </>
-                    )}
-                  </button>
+                  {isAiEnabled && (
+                    <button 
+                      type="button"
+                      onClick={handleVisionAssist}
+                      disabled={loadingVision || !formData.vision}
+                      className="text-black hover:underline disabled:opacity-30 flex items-center gap-2 transition-all decoration-1 underline-offset-4"
+                    >
+                      {loadingVision ? (
+                        <span className="animate-pulse">Refining...</span>
+                      ) : (
+                        <>
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                          Artistic Assist
+                        </>
+                      )}
+                    </button>
+                  )}
                 </label>
                 <textarea 
                   required

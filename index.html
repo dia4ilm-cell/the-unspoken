@@ -42,7 +42,7 @@
             background-color: #FFFFFF;
             color: #000000;
             scroll-behavior: smooth;
-            overflow-x: hidden; /* Prevent horizontal scroll issues */
+            overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
         }
         
@@ -75,7 +75,6 @@
             filter: grayscale(0%);
         }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -100,7 +99,15 @@
 </script>
 </head>
 <body>
+    <noscript>
+        <div style="text-align: center; padding: 50px; font-family: serif;">
+            <h1>Please enable JavaScript</h1>
+            <p>To view the Sharipov Video Production portfolio, JavaScript is required.</p>
+        </div>
+    </noscript>
+    
     <div id="root"></div>
+    
     <script type="module" src="index.tsx"></script>
 
     <script>

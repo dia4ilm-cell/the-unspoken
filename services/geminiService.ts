@@ -1,17 +1,18 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Refined service according to @google/genai guidelines
 export const getVisionAssistance = async (roughNotes: string) => {
-  // Use process.env.API_KEY directly for initialization as per guidelines
-  if (!process.env.API_KEY) return null;
+  // Critical fix: Safe check for process to prevent White Screen on production hosts
+  const apiKey = typeof process !== 'undefined' && process.env ? process.env.API_KEY : null;
+  
+  if (!apiKey) {
+    console.warn("Gemini API Key is not configured. Vision assistance is disabled.");
+    return null;
+  }
   
   try {
-    // Correct initialization with named parameter
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = new GoogleGenAI({ apiKey: apiKey });
     
-    // Using gemini-3-flash-preview for artistic text refinement
-    // Call generateContent directly with model and prompt
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `You are Sharipov, a luxury wedding videographer. A couple gave you these rough notes about their wedding vision: "${roughNotes}". 
@@ -19,7 +20,6 @@ export const getVisionAssistance = async (roughNotes: string) => {
       Use words like 'timeless', 'legacy', 'cinematic', 'intimate', 'heritage'. Don't use bullet points.`,
     });
     
-    // Access response.text property directly
     return response.text || "";
   } catch (error) {
     console.error("Gemini Error:", error);

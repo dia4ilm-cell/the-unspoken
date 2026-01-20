@@ -9,21 +9,19 @@ const About: React.FC = () => {
           {/* Main Portrait Section */}
           <div className="relative order-2 lg:order-1 fade-in">
             <div className="absolute -top-10 -left-10 w-full h-full border border-black/5 -z-10 hidden md:block"></div>
-            {/* 
-                ВАЖНО: Добавлено 'object-top', чтобы голова не обрезалась сверху. 
-                Если нужно еще ниже, можно использовать 'object-[center_20%]'
-            */}
-            <img 
-              src="maksud.jpg" 
-              alt="Maksud Sharipov" 
-              className="w-full aspect-[4/5] object-cover object-top shadow-2xl"
-              onError={(e) => {
-                const img = e.target as HTMLImageElement;
-                if (!img.src.includes('ik.imagekit.io')) {
-                   img.src = "https://ik.imagekit.io/wdrlvk52g/maksud.jpg";
-                }
-              }}
-            />
+            <div className="relative overflow-hidden aspect-[4/5] shadow-2xl bg-gray-50">
+              <img 
+                src="maksud.jpg" 
+                alt="Maksud Sharipov" 
+                className="w-full h-full object-cover object-[center_15%]" 
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  if (!img.src.includes('ik.imagekit.io')) {
+                     img.src = "https://ik.imagekit.io/wdrlvk52g/maksud.jpg";
+                  }
+                }}
+              />
+            </div>
             <div className="absolute bottom-6 right-6 text-black text-right hidden md:block">
                 <span className="font-signature text-4xl block">Maksud Sharipov</span>
                 <span className="text-[10px] tracking-[0.4em] uppercase opacity-70">Founder & Director</span>
