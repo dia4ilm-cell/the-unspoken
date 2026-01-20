@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { PORTFOLIO_DATA } from '../constants.tsx';
-import { PortfolioItem } from '../types.ts';
+import { PORTFOLIO_DATA } from '../constants';
+import { PortfolioItem } from '../types';
 
 const Portfolio: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
