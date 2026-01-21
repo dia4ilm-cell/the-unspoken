@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 
 const Contact: React.FC = () => {
+  console.log("BUILD CHECK 123")
   const [formData, setFormData] = useState({
     name: "",
     email: "",
