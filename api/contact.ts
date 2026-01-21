@@ -17,7 +17,8 @@ export default async function handler(req: any, res: any) {
     if (!toEmail) return res.status(500).json({ error: "CONTACT_TO_EMAIL is not set" });
 
     await resend.emails.send({
-  from: "Website Inquiry <onboarding@resend.dev>",
+  from: "Sharipov Production <inquiry@maxsharipov.com>"
+,
   to: [toEmail],
   replyTo: email,
   subject: `New inquiry — ${name} (${investment})`,
