@@ -30,7 +30,6 @@ const Portfolio: React.FC = () => {
     
     if (selectedVideo) {
       window.addEventListener('keydown', handleKeyDown);
-      // Prevent scrolling on both body and html for total lock
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
       
@@ -85,11 +84,6 @@ const Portfolio: React.FC = () => {
 
   return (
     <div className="bg-white text-black min-h-screen">
-      {/* 
-          IMPORTANT: The main content is wrapped in the animation, 
-          but the Lightbox is a direct sibling to ensure 'fixed' 
-          positioning works correctly over the entire viewport.
-      */}
       <div className="pt-32 md:pt-40 pb-24 px-6 fade-in">
         <div className="container mx-auto max-w-6xl">
           <header className="mb-16 md:mb-24 reveal">
@@ -143,58 +137,56 @@ const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* LIGHTBOX: Positioned absolutely over the viewport */}
       {selectedVideo && (
         <div 
           ref={lightboxRef}
-          className="fixed inset-0 z-[99999] bg-black overflow-hidden flex flex-col"
+          className="fixed inset-0 z-[99999] bg-black overflow-hidden"
           style={{ height: '100dvh', top: 0, left: 0 }}
         >
-          {/* Header UI */}
-          <div className="absolute top-0 left-0 w-full flex justify-between items-center p-6 md:p-12 z-[100] transition-opacity duration-700 opacity-0 hover:opacity-100 focus-within:opacity-100 bg-gradient-to-b from-black/80 to-transparent">
-            <div className="flex flex-col">
-              <span className="text-white text-[10px] md:text-xs font-serif tracking-[0.5em] uppercase font-bold">Sharipov Production</span>
-              <span className="text-white/40 text-[8px] md:text-[9px] tracking-[0.3em] uppercase mt-2">{selectedVideo.title}</span>
-            </div>
-            <button 
-              onClick={closeLightbox} 
-              className="text-white text-[10px] md:text-xs tracking-[0.6em] uppercase font-bold border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all duration-500 bg-white/5 backdrop-blur-xl"
-            >
-              Close
-            </button>
-          </div>
-
-          {/* Video Player Center */}
-          <div className="flex-grow flex items-center justify-center relative bg-black">
+          {/* Video Player Layer - Full Screen Absolute */}
+          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black">
             {isVideoLoading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-[10] bg-black">
+              <div className="absolute inset-0 flex flex-col items-center justify-center z-[100] bg-black">
                 <div className="w-10 h-10 border-t border-white/20 rounded-full animate-spin mb-8"></div>
                 <span className="text-white/20 text-[8px] tracking-[0.8em] uppercase font-bold block animate-pulse">Initializing Cinema</span>
               </div>
             )}
             
-            <div className="w-full aspect-video max-h-screen relative">
-              <iframe 
-                src={getEmbedUrl(selectedVideo.videoUrl)} 
-                className={`absolute inset-0 w-full h-full border-0 transition-opacity duration-[1.5s] ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`} 
-                allow="autoplay; fullscreen; picture-in-picture" 
-                allowFullScreen
-                onLoad={() => {
-                  if (loadingTimeoutRef.current) window.clearTimeout(loadingTimeoutRef.current);
-                  setIsVideoLoading(false);
-                }}
-              ></iframe>
-            </div>
+            <iframe 
+              src={getEmbedUrl(selectedVideo.videoUrl)} 
+              className={`w-full h-full border-0 transition-opacity duration-[1.5s] ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`} 
+              allow="autoplay; fullscreen; picture-in-picture" 
+              allowFullScreen
+              onLoad={() => {
+                if (loadingTimeoutRef.current) window.clearTimeout(loadingTimeoutRef.current);
+                setIsVideoLoading(false);
+              }}
+            ></iframe>
           </div>
 
-          {/* Mobile Bottom Control */}
-          <div className="md:hidden absolute bottom-10 left-0 w-full flex flex-col items-center gap-6 z-[100]">
+          {/* Desktop Overlay UI */}
+          <div className="hidden md:flex absolute top-0 left-0 w-full justify-between items-center p-12 z-[200] opacity-0 hover:opacity-100 transition-opacity duration-500 bg-gradient-to-b from-black/80 to-transparent">
+            <div className="flex flex-col">
+              <span className="text-white text-xs font-serif tracking-[0.5em] uppercase font-bold">Sharipov Production</span>
+              <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase mt-2">{selectedVideo.title}</span>
+            </div>
+            <button 
+              onClick={closeLightbox} 
+              className="text-white text-xs tracking-[0.6em] uppercase font-bold border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all duration-500 bg-white/5 backdrop-blur-xl"
+            >
+              Close
+            </button>
+          </div>
+
+          {/* Mobile Overlay UI (Minimalist) */}
+          <div className="md:hidden absolute bottom-12 left-0 w-full flex flex-col items-center gap-6 z-[200]">
              <button 
               onClick={closeLightbox}
-              className="bg-white/10 backdrop-blur-3xl text-white border border-white/20 px-16 py-5 rounded-full text-[9px] tracking-[0.6em] uppercase font-bold active:scale-95 transition-transform shadow-[0_30px_60px_rgba(0,0,0,0.8)]"
+              className="bg-black/40 backdrop-blur-2xl text-white border border-white/20 px-12 py-4 rounded-full text-[10px] tracking-[0.6em] uppercase font-bold active:scale-90 transition-transform shadow-2xl"
             >
               Exit Project
             </button>
+            <div className="text-white/20 text-[7px] tracking-[0.4em] uppercase font-medium">{selectedVideo.title}</div>
           </div>
         </div>
       )}
