@@ -30,14 +30,10 @@ const Portfolio: React.FC = () => {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
       
-      // Safety timeout: If video hasn't "loaded" in 4 seconds, clear the overlay anyway
-      // to prevent a permanent black screen on flaky mobile connections.
       loadingTimeoutRef.current = window.setTimeout(() => {
         setIsVideoLoading(false);
-      }, 4000);
+      }, 5000);
 
-      // Attempt to enter native fullscreen only on non-iOS or desktop
-      // iOS Safari has restrictive Fullscreen API behavior for iframes.
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       if (!isIOS && lightboxRef.current && lightboxRef.current.requestFullscreen) {
         lightboxRef.current.requestFullscreen().catch(err => {
@@ -72,7 +68,6 @@ const Portfolio: React.FC = () => {
 
   const getEmbedUrl = (url: string) => {
     const id = getVimeoId(url);
-    // CRITICAL: Added muted=1 and playsinline=1 for mobile autoplay compatibility
     return id ? `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&playsinline=1&color=ffffff&title=0&byline=0&portrait=0&badge=0&autopause=0` : url;
   };
 
@@ -131,53 +126,51 @@ const Portfolio: React.FC = () => {
       {selectedVideo && (
         <div 
           ref={lightboxRef}
-          className="fixed inset-0 z-[9999] bg-black flex flex-col justify-center items-center"
+          className="fixed inset-0 z-[9999] bg-black"
+          style={{ height: '100dvh' }}
         >
-          {/* Top Bar UI */}
-          <div className="absolute top-0 w-full flex justify-between items-center p-6 md:p-10 z-[10001] opacity-0 hover:opacity-100 focus-within:opacity-100 transition-opacity duration-700">
+          {/* Top Bar Overlay */}
+          <div className="absolute top-0 left-0 w-full flex justify-between items-center p-6 md:p-10 z-[10002] pointer-events-none transition-opacity duration-700 opacity-0 hover:opacity-100 focus-within:opacity-100">
             <div className="flex flex-col">
               <span className="text-white text-[10px] md:text-xs font-serif tracking-[0.5em] uppercase font-bold">Sharipov Production</span>
-              <span className="text-white/40 text-[8px] md:text-[9px] tracking-[0.3em] uppercase mt-1">{selectedVideo.title} — {selectedVideo.location}</span>
+              <span className="text-white/40 text-[8px] md:text-[9px] tracking-[0.3em] uppercase mt-1">{selectedVideo.title}</span>
             </div>
             <button 
               onClick={closeLightbox} 
-              className="text-white text-[10px] md:text-xs tracking-[0.6em] uppercase font-bold border border-white/20 px-6 py-3 hover:bg-white hover:text-black transition-all duration-500 bg-black/20 backdrop-blur-md"
+              className="pointer-events-auto text-white text-[10px] md:text-xs tracking-[0.6em] uppercase font-bold border border-white/20 px-6 py-3 hover:bg-white hover:text-black transition-all duration-500 bg-black/40 backdrop-blur-md"
             >
               Close
             </button>
           </div>
 
-          <div className="w-full h-full flex items-center justify-center relative">
+          {/* Player Container */}
+          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black">
             {isVideoLoading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-[10000] bg-black">
-                <div className="w-12 h-12 border-t border-white/20 rounded-full animate-spin mb-4"></div>
-                <span className="text-white/30 text-[9px] tracking-[0.5em] uppercase">Cinematic Loading</span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center z-[10001] bg-black">
+                <div className="w-10 h-10 border-t-2 border-white/30 rounded-full animate-spin mb-6"></div>
+                <span className="text-white/20 text-[8px] tracking-[0.6em] uppercase font-bold">Cinema Ready</span>
               </div>
             )}
             
-            <div className="w-full h-full">
-              <div className="relative w-full h-full bg-black">
-                <iframe 
-                  src={getEmbedUrl(selectedVideo.videoUrl)} 
-                  className={`absolute inset-0 w-full h-full border-0 transition-opacity duration-1000 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`} 
-                  allow="autoplay; fullscreen; picture-in-picture" 
-                  allowFullScreen
-                  onLoad={() => {
-                    if (loadingTimeoutRef.current) window.clearTimeout(loadingTimeoutRef.current);
-                    setIsVideoLoading(false);
-                  }}
-                ></iframe>
-              </div>
-            </div>
+            <iframe 
+              src={getEmbedUrl(selectedVideo.videoUrl)} 
+              className={`w-full h-full border-0 transition-opacity duration-1000 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`} 
+              allow="autoplay; fullscreen; picture-in-picture" 
+              allowFullScreen
+              onLoad={() => {
+                if (loadingTimeoutRef.current) window.clearTimeout(loadingTimeoutRef.current);
+                setIsVideoLoading(false);
+              }}
+            ></iframe>
           </div>
 
-          {/* Quick Exit UI for Mobile */}
-          <div className="md:hidden absolute bottom-12 w-full flex justify-center z-[10001] opacity-60">
+          {/* Persistent Mobile Close Button for Accessibility */}
+          <div className="md:hidden absolute bottom-12 left-0 w-full flex justify-center z-[10002]">
              <button 
               onClick={closeLightbox}
-              className="bg-white/10 backdrop-blur-lg text-white border border-white/20 px-10 py-4 rounded-full text-[10px] tracking-[0.5em] uppercase font-bold active:scale-95 transition-transform"
+              className="bg-white/10 backdrop-blur-xl text-white border border-white/20 px-12 py-4 rounded-full text-[9px] tracking-[0.5em] uppercase font-bold active:scale-90 transition-transform shadow-2xl"
             >
-              Exit Cinema
+              Exit Project
             </button>
           </div>
         </div>
