@@ -16,10 +16,10 @@ export default async function handler(req: any, res: any) {
     if (!toEmail) return res.status(500).json({ error: "CONTACT_TO_EMAIL is not set" });
 
     const { data, error } = await resend.emails.send({
-      from: 'Sharipov Production <inquiry@mail.maxsharipov.com>',
-      to: [toEmail],
-      replyTo: email,
-      subject: `New inquiry — ${name} (${investment})`,
+  from: "Sharipov Production <inquiry@mail.maxsharipov.com>",
+  to: ["inquiry@maxsharipov.com"],
+  replyTo: email,
+  subject: `New inquiry — ${name} (${investment})`,
       text: `Name: ${name}
 Email: ${email}
 Phone: ${phone}
