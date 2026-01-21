@@ -1,26 +1,52 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { PORTFOLIO_DATA } from '../constants';
 import { PortfolioItem } from '../types';
 
 const Portfolio: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
   const vimeoLibraryUrl = "https://vimeo.com/priorityfilm";
 
-  const closeLightbox = useCallback(() => setSelectedVideo(null), []);
+  const closeLightbox = useCallback(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+    setSelectedVideo(null);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeLightbox();
     };
+    
     if (selectedVideo) {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
+      
+      // Attempt to enter native fullscreen
+      if (lightboxRef.current && lightboxRef.current.requestFullscreen) {
+        lightboxRef.current.requestFullscreen().catch(err => {
+          console.warn("Fullscreen request failed:", err);
+        });
+      }
     } else {
       document.body.style.overflow = '';
     }
+    
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedVideo, closeLightbox]);
+
+  // Listen for native fullscreen exit (e.g. via system ESC) to sync state
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && selectedVideo) {
+        setSelectedVideo(null);
+      }
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [selectedVideo]);
 
   const getVimeoId = (url: string) => {
     const match = url.match(/vimeo\.com\/(\d+)/);
@@ -29,7 +55,8 @@ const Portfolio: React.FC = () => {
 
   const getEmbedUrl = (url: string) => {
     const id = getVimeoId(url);
-    return id ? `https://player.vimeo.com/video/${id}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0` : url;
+    // Added autoplay, background mode, and forced high quality parameters
+    return id ? `https://player.vimeo.com/video/${id}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0&badge=0` : url;
   };
 
   const getThumbnail = (item: PortfolioItem) => {
@@ -38,7 +65,7 @@ const Portfolio: React.FC = () => {
   };
 
   return (
-    <div className="pt-20 md:pt-40 pb-24 px-6 fade-in bg-white text-black">
+    <div className="pt-32 md:pt-40 pb-24 px-6 fade-in bg-white text-black">
       <div className="container mx-auto max-w-6xl">
         <header className="mb-16 md:mb-24">
           <span className="text-black/40 tracking-[0.5em] text-[9px] md:text-[10px] uppercase block mb-4 md:mb-6 font-bold">The Work</span>
@@ -81,22 +108,41 @@ const Portfolio: React.FC = () => {
       </div>
 
       {selectedVideo && (
-        <div className="fixed inset-0 z-[9999] bg-white flex flex-col">
-          <div className="sticky top-0 w-full flex justify-between items-center p-6 md:p-8 bg-white/95 backdrop-blur-md border-b border-black/5">
-            <span className="text-base md:text-lg font-serif tracking-[0.2em] md:tracking-[0.3em] uppercase font-bold">Sharipov</span>
-            <button onClick={closeLightbox} className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase font-bold opacity-30 hover:opacity-100 px-2 py-1">Close</button>
+        <div 
+          ref={lightboxRef}
+          className="fixed inset-0 z-[9999] bg-black flex flex-col justify-center items-center"
+        >
+          {/* Top Bar - only visible when not in system fullscreen or revealed by mouse */}
+          <div className="absolute top-0 w-full flex justify-between items-center p-6 md:p-10 z-10 opacity-0 hover:opacity-100 transition-opacity duration-500">
+            <span className="text-white text-xs md:text-sm font-serif tracking-[0.4em] uppercase font-bold">Sharipov Production</span>
+            <button 
+              onClick={closeLightbox} 
+              className="text-white text-[10px] md:text-xs tracking-[0.5em] uppercase font-bold border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-all"
+            >
+              Close
+            </button>
           </div>
-          <div className="flex-grow flex items-center justify-center p-4 md:p-6">
-            <div className="w-full max-w-6xl">
-              <div className="relative w-full aspect-video bg-black shadow-2xl">
-                <iframe src={getEmbedUrl(selectedVideo.videoUrl)} className="absolute inset-0 w-full h-full" allow="autoplay; fullscreen" allowFullScreen></iframe>
-              </div>
-              <div className="mt-6 md:hidden text-center">
-                  <p className="text-[10px] tracking-[0.3em] uppercase text-black/40 mb-1 font-bold">{selectedVideo.location}</p>
-                  <h3 className="text-xl font-serif">{selectedVideo.title}</h3>
+
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full max-w-none">
+              <div className="relative w-full h-full bg-black">
+                <iframe 
+                  src={getEmbedUrl(selectedVideo.videoUrl)} 
+                  className="absolute inset-0 w-full h-full border-0" 
+                  allow="autoplay; fullscreen; picture-in-picture" 
+                  allowFullScreen
+                ></iframe>
               </div>
             </div>
           </div>
+
+          {/* Fallback Close for Mobile (Floating Button) */}
+          <button 
+            onClick={closeLightbox}
+            className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3 rounded-full text-[10px] tracking-[0.4em] uppercase font-bold"
+          >
+            Close Project
+          </button>
         </div>
       )}
     </div>
