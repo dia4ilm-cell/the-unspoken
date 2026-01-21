@@ -38,7 +38,7 @@ const Portfolio: React.FC = () => {
   };
 
   return (
-    <div className="pt-32 md:pt-40 pb-24 px-6 fade-in bg-white text-black">
+    <div className="pt-20 md:pt-40 pb-24 px-6 fade-in bg-white text-black">
       <div className="container mx-auto max-w-6xl">
         <header className="mb-16 md:mb-24">
           <span className="text-black/40 tracking-[0.5em] text-[9px] md:text-[10px] uppercase block mb-4 md:mb-6 font-bold">The Work</span>
