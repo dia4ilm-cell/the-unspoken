@@ -74,6 +74,7 @@ const Portfolio: React.FC = () => {
   const getEmbedUrl = (url: string) => {
     const id = getVimeoId(url);
     if (!id) return url;
+    // We keep controls enabled for mobile so user can unmute manually if autoplay blocks sound
     return `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&playsinline=1&color=ffffff&title=0&byline=0&portrait=0&badge=0&autopause=0&dnt=1`;
   };
 
@@ -137,14 +138,15 @@ const Portfolio: React.FC = () => {
         </div>
       </div>
 
+      {/* LIGHTBOX: Pure full-screen cinema mode */}
       {selectedVideo && (
         <div 
           ref={lightboxRef}
-          className="fixed inset-0 z-[99999] bg-black overflow-hidden"
-          style={{ height: '100dvh', top: 0, left: 0 }}
+          className="fixed inset-0 z-[99999] bg-black overflow-hidden flex items-center justify-center"
+          style={{ height: '100dvh', width: '100vw', top: 0, left: 0 }}
         >
-          {/* Video Player Layer - Full Screen Absolute */}
-          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black">
+          {/* Iframe takes absolute full space */}
+          <div className="absolute inset-0 w-full h-full">
             {isVideoLoading && (
               <div className="absolute inset-0 flex flex-col items-center justify-center z-[100] bg-black">
                 <div className="w-10 h-10 border-t border-white/20 rounded-full animate-spin mb-8"></div>
@@ -154,8 +156,8 @@ const Portfolio: React.FC = () => {
             
             <iframe 
               src={getEmbedUrl(selectedVideo.videoUrl)} 
-              className={`w-full h-full border-0 transition-opacity duration-[1.5s] ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`} 
-              allow="autoplay; fullscreen; picture-in-picture" 
+              className={`absolute inset-0 w-full h-full border-0 transition-opacity duration-[1.5s] ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`} 
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media" 
               allowFullScreen
               onLoad={() => {
                 if (loadingTimeoutRef.current) window.clearTimeout(loadingTimeoutRef.current);
@@ -164,25 +166,25 @@ const Portfolio: React.FC = () => {
             ></iframe>
           </div>
 
-          {/* Desktop Overlay UI */}
-          <div className="hidden md:flex absolute top-0 left-0 w-full justify-between items-center p-12 z-[200] opacity-0 hover:opacity-100 transition-opacity duration-500 bg-gradient-to-b from-black/80 to-transparent">
+          {/* Desktop Controls (Floating) */}
+          <div className="hidden md:flex absolute top-0 left-0 w-full justify-between items-center p-12 z-[200] opacity-0 hover:opacity-100 transition-opacity duration-500 bg-gradient-to-b from-black/60 to-transparent pointer-events-none">
             <div className="flex flex-col">
               <span className="text-white text-xs font-serif tracking-[0.5em] uppercase font-bold">Sharipov Production</span>
               <span className="text-white/40 text-[9px] tracking-[0.3em] uppercase mt-2">{selectedVideo.title}</span>
             </div>
             <button 
               onClick={closeLightbox} 
-              className="text-white text-xs tracking-[0.6em] uppercase font-bold border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all duration-500 bg-white/5 backdrop-blur-xl"
+              className="pointer-events-auto text-white text-xs tracking-[0.6em] uppercase font-bold border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all duration-500 bg-white/5 backdrop-blur-xl"
             >
               Close
             </button>
           </div>
 
-          {/* Mobile Overlay UI (Minimalist) */}
-          <div className="md:hidden absolute bottom-12 left-0 w-full flex flex-col items-center gap-6 z-[200]">
+          {/* Mobile Controls (Floating Overlay) */}
+          <div className="md:hidden absolute bottom-10 left-0 w-full flex flex-col items-center gap-6 z-[200] pointer-events-none">
              <button 
               onClick={closeLightbox}
-              className="bg-black/40 backdrop-blur-2xl text-white border border-white/20 px-12 py-4 rounded-full text-[10px] tracking-[0.6em] uppercase font-bold active:scale-90 transition-transform shadow-2xl"
+              className="pointer-events-auto bg-black/40 backdrop-blur-3xl text-white border border-white/20 px-12 py-4 rounded-full text-[10px] tracking-[0.6em] uppercase font-bold active:scale-90 transition-transform shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
             >
               Exit Project
             </button>
