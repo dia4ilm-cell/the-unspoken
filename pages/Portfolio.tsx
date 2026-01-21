@@ -7,11 +7,15 @@ const Portfolio: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<PortfolioItem | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const lightboxRef = useRef<HTMLDivElement>(null);
+  const loadingTimeoutRef = useRef<number | null>(null);
   const vimeoLibraryUrl = "https://vimeo.com/priorityfilm";
 
   const closeLightbox = useCallback(() => {
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});
+    }
+    if (loadingTimeoutRef.current) {
+      window.clearTimeout(loadingTimeoutRef.current);
     }
     setSelectedVideo(null);
     setIsVideoLoading(true);
@@ -26,7 +30,16 @@ const Portfolio: React.FC = () => {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
       
-      if (lightboxRef.current && lightboxRef.current.requestFullscreen) {
+      // Safety timeout: If video hasn't "loaded" in 4 seconds, clear the overlay anyway
+      // to prevent a permanent black screen on flaky mobile connections.
+      loadingTimeoutRef.current = window.setTimeout(() => {
+        setIsVideoLoading(false);
+      }, 4000);
+
+      // Attempt to enter native fullscreen only on non-iOS or desktop
+      // iOS Safari has restrictive Fullscreen API behavior for iframes.
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (!isIOS && lightboxRef.current && lightboxRef.current.requestFullscreen) {
         lightboxRef.current.requestFullscreen().catch(err => {
           console.warn("Fullscreen request failed:", err);
         });
@@ -35,7 +48,10 @@ const Portfolio: React.FC = () => {
       document.body.style.overflow = '';
     }
     
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (loadingTimeoutRef.current) window.clearTimeout(loadingTimeoutRef.current);
+    };
   }, [selectedVideo, closeLightbox]);
 
   useEffect(() => {
@@ -56,7 +72,8 @@ const Portfolio: React.FC = () => {
 
   const getEmbedUrl = (url: string) => {
     const id = getVimeoId(url);
-    return id ? `https://player.vimeo.com/video/${id}?autoplay=1&color=ffffff&title=0&byline=0&portrait=0&badge=0&autopause=0` : url;
+    // CRITICAL: Added muted=1 and playsinline=1 for mobile autoplay compatibility
+    return id ? `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&playsinline=1&color=ffffff&title=0&byline=0&portrait=0&badge=0&autopause=0` : url;
   };
 
   const getThumbnail = (item: PortfolioItem) => {
@@ -145,7 +162,10 @@ const Portfolio: React.FC = () => {
                   className={`absolute inset-0 w-full h-full border-0 transition-opacity duration-1000 ${isVideoLoading ? 'opacity-0' : 'opacity-100'}`} 
                   allow="autoplay; fullscreen; picture-in-picture" 
                   allowFullScreen
-                  onLoad={() => setIsVideoLoading(false)}
+                  onLoad={() => {
+                    if (loadingTimeoutRef.current) window.clearTimeout(loadingTimeoutRef.current);
+                    setIsVideoLoading(false);
+                  }}
                 ></iframe>
               </div>
             </div>
