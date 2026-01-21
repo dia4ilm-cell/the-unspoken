@@ -74,8 +74,9 @@ const Portfolio: React.FC = () => {
   const getEmbedUrl = (url: string) => {
     const id = getVimeoId(url);
     if (!id) return url;
-    // We keep controls enabled for mobile so user can unmute manually if autoplay blocks sound
-    return `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&playsinline=1&color=ffffff&title=0&byline=0&portrait=0&badge=0&autopause=0&dnt=1`;
+    // Set muted=0 to ensure sound is enabled. Autoplay with sound is permitted 
+    // here because the user initiated the play by clicking the portfolio item.
+    return `https://player.vimeo.com/video/${id}?autoplay=1&muted=0&playsinline=1&color=ffffff&title=0&byline=0&portrait=0&badge=0&autopause=0&dnt=1`;
   };
 
   const getThumbnail = (item: PortfolioItem) => {
@@ -138,7 +139,7 @@ const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* LIGHTBOX: Pure full-screen cinema mode */}
+      {/* LIGHTBOX: Pure full-screen cinema mode with Sound Enabled */}
       {selectedVideo && (
         <div 
           ref={lightboxRef}
