@@ -39,8 +39,7 @@ const Contact: React.FC = () => {
         return;
       }
 
-      alert("Thank you for your inquiry.  
-    We sincerely appreciate your interest and will be in touch within 48 hours to discuss your vision.");
+      alert("Thank you for your inquiry. We sincerely appreciate your interest and will be in touch within 48 hours to discuss your vision.");
       setFormData({
         name: "",
         email: "",
