@@ -35,11 +35,12 @@ const Contact: React.FC = () => {
 
       if (!res.ok) {
         console.error("Send failed:", data);
-        alert("Sorry - message was not sent. Please try again.");
+        alert("Sorry — message was not sent. Please try again.");
         return;
       }
 
       alert("Thank you for your inquiry. It would be an honor to tell your story. We will be in touch within 48 hours.");
+      setFormData({
         name: "",
         email: "",
         phone: "",
