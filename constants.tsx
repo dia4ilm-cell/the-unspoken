@@ -36,11 +36,11 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
   },
   {
     id: '5',
-    title: 'Prewedding dinner in LACMA',
-    location: 'Los Angeles, USA',
+    title: 'The Art of Turning Sixty',
+    location: 'Palos Verdes, USA',
     coverImage: '', 
-    videoUrl: 'https://vimeo.com/1149738071',
-    year: '2025'
+    videoUrl: 'https://vimeo.com/1248165728',
+    year: '2026'
   },
   {
     id: '6',
