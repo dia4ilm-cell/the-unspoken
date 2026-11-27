@@ -1,26 +1,82 @@
+
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req: any, res: any) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   try {
-    const { name, email, phone, date, venue, investment, vision } = req.body || {};
+    const {
+      name,
+      email,
+      phone,
+      date,
+      venue,
+      investment,
+      vision,
+      turnstileToken,
+    } = req.body || {};
 
     if (!name || !email || !phone || !date || !venue || !investment || !vision) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const toEmail = process.env.CONTACT_TO_EMAIL;
-    if (!toEmail) return res.status(500).json({ error: "CONTACT_TO_EMAIL is not set" });
+    // Cloudflare Turnstile protection
+    const secretKey = process.env.TURNSTILE_SECRET_KEY;
 
+    if (!secretKey) {
+      console.error("TURNSTILE_SECRET_KEY is not set");
+      return res.status(500).json({ error: "Server configuration error" });
+    }
+
+    if (typeof turnstileToken !== "string" || !turnstileToken) {
+      return res.status(400).json({ error: "Security verification required" });
+    }
+
+    const verification = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: secretKey,
+          response: turnstileToken,
+        }),
+      }
+    );
+
+    const verificationResult = await verification.json();
+
+    if (
+      !verification.ok ||
+      !verificationResult.success ||
+      !["maxsharipov.com", "www.maxsharipov.com"].includes(
+        verificationResult.hostname
+      )
+    ) {
+      return res.status(403).json({
+        error: "Security verification failed. Please try again.",
+      });
+    }
+
+    const toEmail = process.env.CONTACT_TO_EMAIL;
+
+    if (!toEmail) {
+      return res.status(500).json({ error: "Server configuration error" });
+    }
+
+    // Send inquiry to studio
     const { data, error } = await resend.emails.send({
-  from: "Sharipov Production <no-reply@mail.maxsharipov.com>",
-  to: ["inquiry@maxsharipov.com"],
-  replyTo: email,
-  subject: `New inquiry — ${name} (${investment})`,
-  text: `
+      from: "Sharipov Production <no-reply@mail.maxsharipov.com>",
+      to: [toEmail],
+      replyTo: email,
+      subject: `New inquiry — ${name} (${investment})`,
+      text: `
 Name: ${name}
 Email: ${email}
 Phone: ${phone}
@@ -30,15 +86,14 @@ Investment: ${investment}
 
 Vision:
 ${vision}
-  `,
-});
+      `,
+    });
 
     if (error) {
       console.error("Resend error:", error);
-      return res.status(500).json({ error: error.message || "Resend send failed" });
+      return res.status(500).json({ error: "Email delivery failed" });
     }
 
-    
     // Automatic confirmation email
     try {
       const safeName = String(name)
@@ -56,7 +111,7 @@ ${vision}
         html: `
           <div style="background:#f5f2ed;padding:40px 20px;color:#292929;">
             <div style="max-width:560px;margin:auto;background:#ffffff;padding:40px;font-family:Georgia,serif;">
-              
+
               <div style="text-align:center;letter-spacing:5px;font-size:24px;">
                 THE UNSPOKEN
               </div>
@@ -107,9 +162,10 @@ ${vision}
       console.error("Confirmation failed:", confirmationError);
     }
 
-return res.status(200).json({ ok: true, id: data?.id });
+    return res.status(200).json({ ok: true, id: data?.id });
+
   } catch (e: any) {
     console.error("Server error:", e);
-    return res.status(500).json({ error: e?.message || "Server error" });
+    return res.status(500).json({ error: "Server error" });
   }
 }
